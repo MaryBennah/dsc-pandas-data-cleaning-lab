@@ -100,7 +100,7 @@ In the cell below, load `heroes_information.csv` as `heroes_df`:
 
 ```python
 # Your code here
-
+heroes_df = pd.read_csv('heroes_information.csv')
 heroes_df.head()
 ```
 
@@ -114,7 +114,7 @@ There are two ways to do this:
 
 ```python
 # Your code here
-
+heroes_df = pd.read_csv('heroes_information.csv',index_col=0 )
 heroes_df.head()
 ```
 
@@ -157,7 +157,7 @@ In the cell below, inspect the overall shape of the dataframe:
 
 
 ```python
-# Your code here
+heroes_df.shape
 ```
 
 Now let's look at the info printout:
@@ -174,7 +174,7 @@ In the cell below, interpret that information. Do the data types line up with wh
 ```python
 # Replace None with appropriate text
 """
-None
+There are 15 missing values in the publisher variable,  and only 2 missing values in the weight 
 """
 ```
 
@@ -185,6 +185,8 @@ Now, repeat the same process with `super_hero_powers.csv`. Name the dataframe `p
 
 ```python
 # Your code here (create more cells as needed)
+powers_df = pd.read_csv('super_hero_powers.csv', index_col=0 )
+powers_df.head()
 ```
 
 The following code will check if it was loaded correctly:
@@ -249,6 +251,7 @@ Write your answer below, and explain how it relates to the information we have:
 
 ```python
 # Replace None with appropriate text
+Publisher has only 15 missing values.  The strategy  is to fill in with the missing values since  the number is negligible
 """
 None
 """
@@ -259,6 +262,7 @@ Now, implement the strategy to drop rows with missing values using code. (You ca
 
 ```python
 # Your code here
+heroes_df = heroes_df.dropna()
 ```
 
 Now there should be no missing values in the publisher column:
@@ -288,6 +292,8 @@ Identify those two cases below:
 
 ```python
 # Replace None with appropriate text
+Marvel Comics" and "Marvel" — should be merged into one.
+DC Comics" and " DC Comics" (note the leading space) — should be merged into one.
 """
 None
 """
@@ -298,6 +304,7 @@ Now, write some code to handle these cases. If you're not sure where to start, l
 
 ```python
 # Your code here
+heroes_df['Publisher'].str.strip().replace({'Marvel': 'Marvel Comics', ' DC Comics': 'DC Comics'}).value_counts()
 ```
 
 Check your work below:
@@ -366,7 +373,9 @@ In the cell below, identify the shared key, and your strategy for joining the da
 ```python
 # Replace None with appropriate text
 """
-None
+The shared key between heroes_df and powers_df is the hero name, which appears as the name column in heroes_df and as the index in powers_df.
+To join these DataFrames, I will use the name column from heroes_df and match it with the index of powers_df. 
+I will use an inner join, so that only the superheroes present in both DataFrames will be included in the final DataFrame.
 """
 ```
 
@@ -377,6 +386,15 @@ In the cell below, create a new dataframe called `heroes_and_powers_df` that con
 
 ```python
 # Your code here (create more cells as needed)
+powers_transposed = powers_df.T
+
+heroes_and_powers_df = pd.merge(
+    heroes_df, 
+    powers_transposed, 
+    left_on="name", 
+    right_index=True,
+    how="inner"  
+)
 ```
 
 Run the code below to check your work:
